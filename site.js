@@ -1,2 +1,53 @@
-/* Crestline Metals site runtime */
-(()=>{if(!document.querySelector('link[data-crestline-forge]')){const t=document.createElement('link');t.rel='stylesheet';t.href='/forge-theme.css';t.dataset.crestlineForge='true';document.head.appendChild(t)}const m=document.getElementById('menu'),p=document.getElementById('mobilepanel');if(m&&p){m.onclick=()=>{const o=p.classList.toggle('open');document.body.classList.toggle('menu-open',o);m.setAttribute('aria-expanded',o);m.textContent=o?'×':'☰'};p.querySelectorAll('a').forEach(a=>a.onclick=()=>{p.classList.remove('open');document.body.classList.remove('menu-open');m.textContent='☰'})}const rs=document.querySelectorAll('[data-reveal]');if('IntersectionObserver'in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');io.unobserve(e.target)}}),{threshold:.12});rs.forEach(x=>io.observe(x))}else rs.forEach(x=>x.classList.add('seen'));const pr=document.getElementById('progress'),fl=document.getElementById('floating'),hb=document.querySelector('.hero-bg');addEventListener('scroll',()=>{const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;if(pr)pr.style.width=(h?y/h*100:0)+'%';if(fl)fl.classList.toggle('show',y>520);if(hb&&!matchMedia('(prefers-reduced-motion: reduce)').matches)hb.style.transform=`scale(1.025) translateY(${Math.min(y*.045,26)}px)`},{passive:true});const y=document.getElementById('year');if(y)y.textContent=new Date().getFullYear();const f=document.getElementById('inquiry');if(f)f.onsubmit=e=>{e.preventDefault();document.getElementById('status').textContent="Your inquiry has not been sent. Online delivery is not yet available."}})();
+/* Crestline Metals: local public-site interactions. No form delivery or storage. */
+(() => {
+  "use strict";
+  const menu = document.getElementById("menu");
+  const panel = document.getElementById("mobilepanel");
+  const setMenu = open => {
+    if (!menu || !panel) return;
+    menu.setAttribute("aria-expanded", String(open));
+    panel.hidden = !open;
+    menu.innerHTML = open ? 'Close <span aria-hidden="true">−</span>' : 'Menu <span aria-hidden="true">+</span>';
+  };
+  if (menu && panel) {
+    menu.addEventListener("click", () => setMenu(menu.getAttribute("aria-expanded") !== "true"));
+    panel.querySelectorAll("a").forEach(link => link.addEventListener("click", () => setMenu(false)));
+    document.querySelector("header").addEventListener("keydown", event => {
+      if (event.key === "Escape" && menu.getAttribute("aria-expanded") === "true") { setMenu(false); menu.focus(); }
+    });
+    const desktop = window.matchMedia("(min-width: 901px)");
+    desktop.addEventListener("change", () => { if (desktop.matches) setMenu(false); });
+  }
+  document.querySelectorAll("[data-year]").forEach(node => { node.textContent = String(new Date().getFullYear()); });
+  const form = document.getElementById("requirement-brief");
+  if (form) {
+    const result = document.getElementById("brief-result");
+    const questions = {
+      properties: ["Which material properties and specification revision apply?", "What supporting material or testing documentation would need review?", "Which requirements remain to be agreed with a technically qualified team?"],
+      dimensions: ["Which dimensions, finish, and downstream processing requirements apply?", "What measurement and inspection evidence would be expected?", "Which packaging or handling details need clarification?"],
+      traceability: ["How should source material, process history, and output identity connect?", "Which specification revision and inspection records would be required?", "Who would review documentation before an authorized release?"],
+      program: ["What is the intended application and program scope?", "Which timing, quantities, or dependencies are known and which are open?", "What needs confirmation before a commercial commitment could be considered?"]
+    };
+    const applications = {infrastructure:"Infrastructure",energy:"Energy",mobility:"Automotive & mobility",construction:"Construction",equipment:"Industrial equipment",other:"Another application / To discuss"};
+    const priorities = {properties:"Material properties",dimensions:"Dimensions & finish",traceability:"Traceability & documentation",program:"Program scope & timing"};
+    form.addEventListener("input", () => { result.hidden = true; });
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const application = document.getElementById("application").value;
+      const priority = document.getElementById("priority").value;
+      if (!applications[application] || !questions[priority]) return;
+      const note = document.getElementById("requirement-note").value.trim();
+      document.getElementById("brief-copy").value = ["CRESTLINE METALS — REQUIREMENTS BRIEF", "Local draft / Not sent", "", "Application: " + applications[application], "Focus: " + priorities[priority], "", "Questions for technical alignment:", ...questions[priority].map(q => "• " + q), "", "Question to carry forward: " + (note || "Not supplied"), "", "Open points: actual capability, specification agreement, inspection evidence, commercial terms, and timing remain to be confirmed.", "", "This is not a quote, order, or production commitment."].join("\n");
+      document.getElementById("brief-status").textContent = "Draft prepared for " + applications[application] + ". Nothing has been sent.";
+      result.hidden = false;
+      document.getElementById("brief-result-title").focus();
+    });
+  }
+  const inquiry = document.getElementById("inquiry");
+  if (inquiry) inquiry.addEventListener("submit", event => {
+    event.preventDefault();
+    const status = document.getElementById("status");
+    status.textContent = "Your inquiry has not been sent. Online delivery is not yet available. Your entered details remain in this page for review.";
+    status.focus();
+  });
+})();

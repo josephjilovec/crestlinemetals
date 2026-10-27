@@ -1,26 +1,19 @@
 # Crestline Metals
 
-Public website for the Crestline Metals industrial manufacturing venture, with Bethlehem, Pennsylvania identified as its planned operating base.
+[Public website](https://crestlinemetals.josephjilovec.com/) for a steel-manufacturing venture in development. Bethlehem, Pennsylvania is the planned operating base.
 
-## Stack
+## Public experience
 
-Static HTML, CSS, and JavaScript. No dependency installation or build step is required. Deploy the repository root with the included Vercel configuration.
+The homepage follows material requirements, a proposed melt/cast/roll/finish route, an illustrative traceability traveler, and a browser-local buyer requirements organizer. It does not quote, accept an order, or establish current facility capacity.
 
-## Pages
+All eight existing pages and Vercel clean URLs are preserved: home, about, capabilities, markets, quality, news, careers, and contact. The existing parent-hosted executive-brief link is retained without changing the parent repository.
 
-- index.html — company introduction
-- about.html — company direction
-- capabilities.html — proposed process and product programs
-- markets.html — intended applications
-- quality.html — quality and sustainability priorities
-- news.html — company and industry information
-- careers.html — recruiting status
-- contact.html — inquiry preview
+## Stack and maintenance
 
-## Maintenance
+Static HTML, one venture-specific stylesheet (styles.css), and site.js. No dependency installation or framework is required. The competing runtime theme has been removed; the stylesheet loads directly in the document.
 
-styles.css provides the base presentation. forge-theme.css provides the current brand theme and is loaded by site.js. site.js also handles navigation and section effects.
+site.js handles the accessible mobile menu, local requirements draft, year labels, and the existing contact preview. Neither form sends data or saves a draft. Input and draft content remain in the page; the requirement draft is not automatically transferred to the contact route.
 
-The contact form validates input locally but does not deliver inquiries. Its preview label and status message must remain accurate until delivery is implemented and tested.
+Representative image sources and delivery variants are documented in assets/IMAGE_NOTES.md. Inline documentation and workflow examples are illustrative, not operating certificates.
 
-Keep facility, capacity, certification, customer, and operating claims aligned with verified current information. Internal brand direction, publication checklists, and editorial history are maintained separately.
+Keep facility, capacity, certification, customer, hiring, and operating claims aligned with verified current information. Private business documents remain separate. Deployment configuration is unchanged.
